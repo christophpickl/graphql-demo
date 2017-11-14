@@ -11,12 +11,10 @@ type Author {
     posts: [Post]!
 }
 
-# The Root Query for the application
 type Query {
     recentPosts(count: Int, offset: Int): [Post]!
 }
 
-# The Root Mutation for the application
 type Mutation {
     writePost(title: String!, category: String, authorId: String!) : Post!
 }

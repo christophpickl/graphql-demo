@@ -34,6 +34,12 @@ mutation newPost {
 }
 ```
 
+## TODO
+* have a look at this: https://github.com/timtebeek/graphql-jpa-spring-boot-starter
+* https://github.com/pgutkowski/KGraphQL
+* https://github.com/VerachadW/kraph
+
+
 ## Resources
 
 * http://www.baeldung.com/spring-graphql
