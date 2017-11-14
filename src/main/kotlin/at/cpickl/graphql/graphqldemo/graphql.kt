@@ -16,8 +16,26 @@ class PostResolver(private val authorDao: AuthorDao) : GraphQLResolver<Post> {
 }
 
 @Component
-class PostMutation(private val postDao: PostDao) : GraphQLMutationResolver {
-    fun writePost(title: String, category: String, authorId: String): Post = postDao.savePost(title, category, authorId)
+class PostMutation(private val postDao: PostDao, private val authorDao: AuthorDao) : GraphQLMutationResolver {
+    fun writePost(title: String, category: String, authorId: String): Post {
+        authorDao.getAuthorById(authorId) ?: throw IllegalArgumentException("Unknown author ID '$authorId'!")
+        return postDao.savePost(Post(newUUID(), title, category, authorId))
+    }
+}
+
+data class AuthorInput(
+        val name: String,
+        val posts: List<PostInput>
+)
+
+data class PostInput(
+        val title: String,
+        val category: String
+)
+
+@Component
+class AuthorMutation(private val authorService: AuthorService) : GraphQLMutationResolver {
+    fun writeAuthorDeep(author: AuthorInput): Author = authorService.saveAuthor(author)
 }
 
 @Component

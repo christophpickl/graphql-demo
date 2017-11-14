@@ -23,11 +23,35 @@ query {
 Create new post:
 
 ```
-mutation newPost {
+mutation {
   writePost(
     title: "title1"
     category: "category1"
     authorId: "1"
+  ) {
+    id
+  }
+}
+```
+
+Create new author with posts:
+
+```
+mutation {
+  writeAuthorDeep(
+    author: {
+      name: "new author"
+      posts: [
+        {
+          title: "post A"
+          category: "category A"
+        },
+        {
+          title: "post B"
+          category: "category B"
+        }
+      ]
+    }
   ) {
     id
   }
@@ -45,3 +69,4 @@ mutation newPost {
 * http://www.baeldung.com/spring-graphql
 * https://github.com/graphql-java/graphql-java-tools/blob/master/src/test/kotlin/com/coxautodev/graphql/tools/EndToEndSpec.kt
 * https://github.com/graphql-java/graphql-spring-boot/tree/master/graphql-spring-boot-autoconfigure
+* https://github.com/mugli/learning-graphql

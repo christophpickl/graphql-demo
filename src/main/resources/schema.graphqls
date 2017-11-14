@@ -15,6 +15,17 @@ type Query {
     recentPosts(count: Int, offset: Int): [Post]!
 }
 
+input AuthorInput {
+    name: String!
+    posts: [PostInput]!
+}
+
+input PostInput {
+    title: String!
+    category: String
+}
+
 type Mutation {
     writePost(title: String!, category: String, authorId: String!) : Post!
+    writeAuthorDeep(author: AuthorInput!) : Author!
 }

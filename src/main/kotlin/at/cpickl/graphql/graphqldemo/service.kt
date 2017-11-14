@@ -1,8 +1,10 @@
 package at.cpickl.graphql.graphqldemo
 
 import org.springframework.stereotype.Component
-import java.util.UUID
+import java.util.*
 import kotlin.streams.toList
+
+fun newUUID() = UUID.randomUUID().toString()
 
 @Component
 class PostDao {
@@ -21,19 +23,38 @@ class PostDao {
                 .toList()
     }
 
-    fun savePost(title: String, category: String, authorId: String): Post {
-        return Post(UUID.randomUUID().toString(), title, category, authorId).apply {
-            posts.add(0, this)
-        }
+    fun savePost(post: Post): Post {
+        posts.add(0, post)
+        return post
     }
 }
 
 @Component
 class AuthorDao {
-    private val authors = listOf(
+    private val authors = mutableListOf(
             Author("1", "Christoph"),
             Author("2", "John")
     )
 
     fun getAuthorById(authorId: String): Author? = authors.firstOrNull { it.id == authorId }
+
+    fun saveAuthor(author: Author) {
+        authors.add(0, author)
+    }
+}
+
+@Component
+class AuthorService(
+        private val authors: AuthorDao,
+        private val posts: PostDao
+) {
+    fun saveAuthor(authorInp: AuthorInput): Author {
+        val author = Author(newUUID(), authorInp.name)
+        authors.saveAuthor(author)
+        authorInp.posts.map { Post(id = newUUID(), title = it.title, category = it.category, authorId = author.id) }.forEach {
+            posts.savePost(it)
+        }
+        return author
+    }
+
 }
